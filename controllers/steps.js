@@ -15,7 +15,40 @@ const isToday = (someDate) => {
 
 const cardsBuilder = (patient, lastSteps = {}) => {
   const lastStep = lastSteps.entry && lastSteps.entry[0].resource;
-  return []; // TODO: Implement
+  if (lastStep && isToday(new Date(lastStep.effectiveDateTime))) {
+    // We have steps recorded, send back status...
+    return [
+      {
+        uuid: uuidv4(),
+        summary: "Steps were recorded today!",
+        indicator: "info",
+        detail: `Logged *${lastStep.valueInteger}* steps for ${patient.name[0].given}. Great work!`,
+        source: {
+          label: "Steptracker 2000"
+        }
+      }
+    ];
+  } else {
+    // We need to record today's steps, there isn't one
+    return [
+      {
+        uuid: uuidv4(),
+        summary: "Oops, no steps recorded for today!",
+        indicator: "warning",
+        detail: `No steps for ${patient.name[0].given}. You can launch the _SMART app_ with the link below.`,
+        source: {
+          label: "Steptracker 2000"
+        },
+        links: [
+          {
+            label: "Record steps for today",
+            url: "https://csb-jj5gz.netlify.app/launch.html",
+            type: "smart"
+          }
+        ]
+      }
+    ];
+  }
 };
 
 // Respond to calling the hook

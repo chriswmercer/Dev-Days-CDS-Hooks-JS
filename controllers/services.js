@@ -2,7 +2,11 @@ import express from "express";
 
 const router = express.Router();
 
-const prefetch = {}; // TODO: Implement!
+const prefetch = {
+  patient: "Patient/{{context.patientId}}",
+  lastStepBundle:
+    "Observation?subject={{context.patientId}}&code=http://loinc.org|41950-7&_sort=-date&_count=1"
+};
 
 const stepService = {
   hook: "patient-view",
